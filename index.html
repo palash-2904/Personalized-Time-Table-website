@@ -1,0 +1,367 @@
+ <!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudyPlan | Personalized Timetable</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#create-plan">Skip to main content</a>
+
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <div class="brand" aria-label="StudyPlan Home">
+        <div class="brand__mark" aria-hidden="true">SP</div>
+        <div class="brand__text">
+          <div class="brand__title">StudyPlan</div>
+          <div class="brand__subtitle">Personalized timetable</div>
+        </div>
+      </div>
+
+      <button class="icon-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+        <span class="icon-btn__bar"></span>
+        <span class="icon-btn__bar"></span>
+        <span class="icon-btn__bar"></span>
+      </button>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <ul class="nav__links" id="navLinks">
+          <li><a href="#home" class="nav__link">Home</a></li>
+          <li><a href="#create-plan" class="nav__link">Create Plan</a></li>
+          <li><a href="#how" class="nav__link">How It Works</a></li>
+          <li><a href="#saved" class="nav__link">Saved Plans</a></li>
+        </ul>
+      </nav>
+
+      <div class="topbar__actions">
+        <button class="btn btn--primary" id="generateTopBtn" type="button">Generate</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="home">
+      <div class="container hero__inner">
+        <div class="hero__content">
+          <h1>Build a timetable that actually sticks.</h1>
+          <p class="muted">
+            Add your subjects, time windows, and study days. We will preview a weekly plan you can save and reuse.
+          </p>
+          <div class="hero__cta">
+            <a class="btn btn--primary" href="#create-plan">Create my plan</a>
+            <button class="btn btn--ghost" id="seeExampleBtn" type="button">See example</button>
+          </div>
+
+          <div class="hero__stats" aria-label="Quick highlights">
+            <div class="stat">
+              <div class="stat__num" id="statSubjects">0</div>
+              <div class="stat__label">Subjects</div>
+            </div>
+            <div class="stat">
+              <div class="stat__num" id="statHours">0</div>
+              <div class="stat__label">Hours / week</div>
+            </div>
+            <div class="stat">
+              <div class="stat__num" id="statDays">0</div>
+              <div class="stat__label">Days chosen</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero__card">
+          <div class="card card--preview">
+            <div class="card__header">
+              <div>
+                <h2 class="card__title">Preview</h2>
+                <p class="card__subtitle">A simple weekly view (mock schedule)</p>
+              </div>
+              <span class="pill">Week view</span>
+            </div>
+
+            <div class="mini-grid" aria-label="Mini timetable preview">
+              <div class="mini-grid__row">
+                <span class="mini-grid__day">Mon</span>
+                <span class="mini-grid__block">Math</span>
+                <span class="mini-grid__block mini-grid__block--light">Break</span>
+              </div>
+              <div class="mini-grid__row">
+                <span class="mini-grid__day">Wed</span>
+                <span class="mini-grid__block">CS</span>
+                <span class="mini-grid__block">Bio</span>
+              </div>
+              <div class="mini-grid__row">
+                <span class="mini-grid__day">Fri</span>
+                <span class="mini-grid__block">Chem</span>
+                <span class="mini-grid__block mini-grid__block--light">Review</span>
+              </div>
+            </div>
+
+            <p class="muted small">
+              This is only a UI preview. The real scheduling algorithm can be added later.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CREATE PLAN -->
+    <section class="section" id="create-plan">
+      <div class="container">
+        <div class="section__header">
+          <h2>Create Plan</h2>
+          <p class="muted">Fill the inputs, then generate a preview timetable. You can save it locally.</p>
+        </div>
+
+        <div class="layout">
+          <!-- LEFT: FORM -->
+          <section class="card" aria-label="Plan inputs">
+            <div class="card__header">
+              <div>
+                <h3 class="card__title">Inputs</h3>
+                <p class="card__subtitle">Your week settings and subjects</p>
+              </div>
+              <button class="btn btn--ghost" id="resetBtn" type="button">Reset</button>
+            </div>
+
+            <form id="planForm" class="form" novalidate>
+              <div class="grid2">
+                <label class="field">
+                  <span class="field__label">Total study hours per week</span>
+                  <input id="hoursPerWeek" name="hoursPerWeek" type="number" min="1" max="80" placeholder="e.g., 14" required />
+                  <span class="field__hint">Used to create mock blocks.</span>
+                </label>
+
+                <label class="field">
+                  <span class="field__label">Plan name (for saving)</span>
+                  <input id="planName" name="planName" type="text" placeholder="e.g., Midterm Prep" maxlength="40" />
+                  <span class="field__hint">Optional until you save.</span>
+                </label>
+              </div>
+
+              <div class="grid3">
+                <label class="field">
+                  <span class="field__label">Start date</span>
+                  <input id="startDate" name="startDate" type="date" required />
+                </label>
+
+                <label class="field">
+                  <span class="field__label">Exam date</span>
+                  <input id="examDate" name="examDate" type="date" required />
+                </label>
+
+                <label class="field">
+                  <span class="field__label">Sessions per day (preview)</span>
+                  <select id="sessionsPerDay" name="sessionsPerDay">
+                    <option value="1">1</option>
+                    <option value="2" selected>2</option>
+                    <option value="3">3</option>
+                  </select>
+                  <span class="field__hint">How many blocks per chosen day.</span>
+                </label>
+              </div>
+
+              <fieldset class="fieldset">
+                <legend>Preferred study days</legend>
+                <div class="days" role="group" aria-label="Choose study days">
+                  <label class="chip"><input type="checkbox" name="days" value="Mon" checked /> Mon</label>
+                  <label class="chip"><input type="checkbox" name="days" value="Tue" /> Tue</label>
+                  <label class="chip"><input type="checkbox" name="days" value="Wed" checked /> Wed</label>
+                  <label class="chip"><input type="checkbox" name="days" value="Thu" /> Thu</label>
+                  <label class="chip"><input type="checkbox" name="days" value="Fri" checked /> Fri</label>
+                  <label class="chip"><input type="checkbox" name="days" value="Sat" /> Sat</label>
+                  <label class="chip"><input type="checkbox" name="days" value="Sun" /> Sun</label>
+                </div>
+              </fieldset>
+
+              <div class="grid3">
+                <label class="field">
+                  <span class="field__label">Daily window start</span>
+                  <input id="timeStart" name="timeStart" type="time" value="18:00" required />
+                </label>
+                <label class="field">
+                  <span class="field__label">Daily window end</span>
+                  <input id="timeEnd" name="timeEnd" type="time" value="21:00" required />
+                </label>
+                <label class="field">
+                  <span class="field__label">Break every (minutes)</span>
+                  <input id="breakEvery" name="breakEvery" type="number" min="20" max="120" value="50" />
+                </label>
+              </div>
+
+              <div class="grid2">
+                <label class="field">
+                  <span class="field__label">Break length (minutes)</span>
+                  <input id="breakLength" name="breakLength" type="number" min="5" max="30" value="10" />
+                </label>
+
+                <div class="field">
+                  <span class="field__label">Quick tips</span>
+                  <div class="tips">
+                    <div class="tip">Use fewer days for longer focused sessions.</div>
+                    <div class="tip">Set priorities to push key subjects earlier in the week.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="subjects">
+                <div class="subjects__header">
+                  <h4>Subjects</h4>
+                  <div class="subjects__actions">
+                    <button class="btn btn--ghost" id="addSubjectBtn" type="button">+ Add subject</button>
+                  </div>
+                </div>
+
+                <div class="subjects__table" role="table" aria-label="Subjects list">
+                  <div class="subjects__row subjects__row--head" role="row">
+                    <div role="columnheader">Subject</div>
+                    <div role="columnheader">Difficulty (1–5)</div>
+                    <div role="columnheader">Priority (1–5)</div>
+                    <div role="columnheader">Topics</div>
+                    <div role="columnheader" class="right">Remove</div>
+                  </div>
+
+                  <div id="subjectsBody"></div>
+                </div>
+
+                <p class="muted small">Add at least one subject to generate.</p>
+              </div>
+              <div class="subjects">
+  <div class="subjects__header">
+    <h4>Topics (Spaced Reviews)</h4>
+    <div class="subjects__actions">
+      <button class="btn btn--ghost" id="addTopicBtn" type="button">+ Add topic</button>
+    </div>
+  </div>
+
+  <div class="subjects__table" role="table" aria-label="Topics list">
+    <div class="subjects__row subjects__row--head" role="row">
+      <div role="columnheader">Course</div>
+      <div role="columnheader">Topic</div>
+      <div role="columnheader">Lecture date/time</div>
+      <div role="columnheader">Minutes</div>
+      <div role="columnheader" class="right">Remove</div>
+    </div>
+
+    <div id="topicsBody"></div>
+  </div>
+
+  <p class="muted small">Each topic generates 5 review sessions.</p>
+</div>
+
+              <div class="form__errors" id="formErrors" aria-live="polite"></div>
+
+              <div class="form__actions">
+                <button class="btn btn--primary" id="generateBtn" type="submit">Generate timetable</button>
+                <button class="btn" id="saveBtn" type="button">Save plan</button>
+              </div>
+            </form>
+          </section>
+
+          <!-- RIGHT: PREVIEW -->
+          <section class="card" aria-label="Timetable preview">
+            <div class="card__header">
+              <div>
+                <h3 class="card__title">Timetable Preview</h3>
+                <p class="card__subtitle">Mock distribution across your chosen days</p>
+              </div>
+              <span class="pill" id="previewPill">Not generated</span>
+            </div>
+
+            <div class="summary" aria-label="Schedule summary">
+              <div class="summary__item">
+                <div class="summary__label">Total hours scheduled</div>
+                <div class="summary__value" id="sumHours">0</div>
+              </div>
+              <div class="summary__item">
+                <div class="summary__label">Subjects included</div>
+                <div class="summary__value" id="sumSubjects">0</div>
+              </div>
+              <div class="summary__item">
+                <div class="summary__label">Next session</div>
+                <div class="summary__value" id="sumNext">None</div>
+              </div>
+            </div>
+
+            <div class="week" aria-label="Week timetable grid">
+              <div class="week__head" id="weekHead"></div>
+              <div class="week__grid" id="weekGrid"></div>
+            </div>
+
+            <div class="muted small">
+              Tip: Save your plan, then load it from the Saved Plans section.
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section alt" id="how">
+      <div class="container">
+        <div class="section__header">
+          <h2>How it works</h2>
+          <p class="muted">
+            This starter site validates inputs, generates a simple preview schedule, and saves plans in localStorage.
+          </p>
+        </div>
+
+        <div class="how">
+          <div class="card">
+            <h3 class="h3">1) Enter inputs</h3>
+            <p class="muted">Hours, dates, time window, and your subject list.</p>
+          </div>
+          <div class="card">
+            <h3 class="h3">2) Generate preview</h3>
+            <p class="muted">We distribute blocks across your selected days.</p>
+          </div>
+          <div class="card">
+            <h3 class="h3">3) Save plans</h3>
+            <p class="muted">Store and reload your plans anytime on this device.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SAVED PLANS -->
+    <section class="section" id="saved">
+      <div class="container">
+        <div class="section__header">
+          <h2>Saved Plans</h2>
+          <p class="muted">Saved on your browser only (localStorage).</p>
+        </div>
+
+        <div class="saved">
+          <div id="savedPlansList" class="saved__grid" aria-label="Saved plans list"></div>
+          <div class="muted small" id="savedEmptyNote">No saved plans yet.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__left">
+        <div class="brand brand--small">
+          <div class="brand__mark" aria-hidden="true">SP</div>
+          <div class="brand__text">
+            <div class="brand__title">StudyPlan</div>
+            <div class="brand__subtitle">Made for focused weeks</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer__right">
+        <a class="footer__link" href="#create-plan">Create Plan</a>
+        <a class="footer__link" href="#saved">Saved Plans</a>
+        <a class="footer__link" href="#how">How It Works</a>
+        <span class="footer__copy">© <span id="year"></span></span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
