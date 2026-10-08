@@ -1,61 +1,60 @@
-# StudyPlan: Spaced Repetition Timetable
+# Cognifyx
 
-StudyPlan is a small web application that generates a weekly study timetable based on when you learned a topic. Instead of planning only “hours,” it schedules short review sessions at fixed intervals so that concepts are revisited before they are forgotten.
+Enter your weekly class timetable and Cognifyx schedules every revision for you, spaced along the forgetting curve, with a specific study technique for each one.
 
-The current version is intentionally simple. It focuses on topic level scheduling and a clear preview of the week, without external libraries or frameworks.
+## The revision ladder
 
-## What it does
+For every class session:
 
-For each topic you add, you provide the course name, the topic name, and the lecture date and time. The app then schedules five review sessions:
+| When | Technique |
+| --- | --- |
+| Right after class | Brain dump (active recall) |
+| Evening (default 18:00) | Teach a 6-year-old |
+| Before sleep (bedtime minus 20 min) | Write your own questions |
+| After 2 days | Answer your questions from memory |
+| After 4 days | Blank page + teach |
+| After 7 days | Practice test |
+| After 2 weeks | Teach + test |
+| After 1 month | Full recall test |
 
-- Right after the lecture
-- Within one hour
-- Before sleeping
-- Two days later
-- Six days later
+Evening and bedtime are configurable on the Method page. Reviews are computed from your classes, so editing a class reschedules everything automatically.
 
-The scheduled times are snapped into an allowed study window and can handle windows that cross midnight.
+## Run it
 
-## Key details
+Requires Node.js 22.13+ (uses the built-in `node:sqlite`; no npm install needed).
 
-- Topic level scheduling (not just course level)
-- Cross midnight time windows supported (example: 7:00 PM to 1:00 AM)
-- Bedtime based “before sleeping” session
-- Weekly timetable preview
-- Plans saved locally in the browser using localStorage
-- Responsive layout
+```
+npm start          # http://localhost:3000
+npm test
+```
 
-## Technology
+Environment variables: `PORT` (default 3000), `DB_PATH` (default `data/cognifyx.db`).
 
-- HTML
-- CSS
-- Vanilla JavaScript
-- Git and GitHub Pages
+## Storage
 
-## Project layout
+- **With the server** (`npm start`): data lives in SQLite (`data/cognifyx.db`). The header badge shows **Synced**.
+- **Static hosting only** (e.g. GitHub Pages serving `public/`): the app detects no API and stores data in the browser's localStorage. The badge shows **Local only**.
 
-- `index.html` page structure
-- `styles.css` styling
-- `script.js` scheduling logic and UI behavior
+There is no login yet: anyone who can reach the server can read and edit its data. Run it locally or behind your own access control until accounts are added.
 
-## Live site
+## Deploy to GitHub Pages
 
-https://palash-2904.github.io/Personalized-Time-Table-website/
+`.github/workflows/pages.yml` runs the tests and publishes `public/` whenever `main` is updated. One-time setup: repo **Settings → Pages → Build and deployment → Source: GitHub Actions**. The site is then at https://palash-2904.github.io/Personalized-Time-Table-website/ and runs in "Local only" mode (data stays in each browser, not shared across devices). For synced data, host the Node server (`npm start`) somewhere that runs Node and use that URL instead.
 
-## How to run locally
+## API
 
-1. Clone the repository or download the files.
-2. Open `index.html` in a browser.
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/state` | classes, settings, review completions, notes |
+| POST | `/api/classes` | create class |
+| PUT / DELETE | `/api/classes/:id` | update / delete class (and its history) |
+| PUT | `/api/settings` | `{eveningTime, bedtime}` |
+| PUT | `/api/reviews` | `{classId, date, step, status: "done"\|"skipped"\|null}` |
+| PUT | `/api/notes` | `{classId, date, topic}` |
 
-## Notes on scheduling
+## Layout
 
-This project currently uses a fixed set of review intervals. It does not yet implement an adaptive model based on performance, difficulty, or a forgetting curve. The main goal of this version is to get the workflow and time handling correct.
-
-## Planned improvements
-
-- Mark reviews as completed
-- Reschedule missed reviews
-- Difficulty based or performance based spacing
-- A calendar style view with better time placement
-- Cleaner saved plan management
-
+- `public/` frontend (`scheduler.js` is the pure scheduling logic, shared with the tests)
+- `server/` HTTP server, SQLite layer, validation
+- `tests/` `node --test` suites for the scheduler and API
+- `timetable-logic_v1.py` early prototype, no longer used
