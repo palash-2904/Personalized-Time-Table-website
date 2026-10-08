@@ -37,6 +37,10 @@ Environment variables: `PORT` (default 3000), `DB_PATH` (default `data/cognifyx.
 
 There is no login yet: anyone who can reach the server can read and edit its data. Run it locally or behind your own access control until accounts are added.
 
+## Deploy to GitHub Pages
+
+`.github/workflows/pages.yml` runs the tests and publishes `public/` whenever `main` is updated. One-time setup: repo **Settings → Pages → Build and deployment → Source: GitHub Actions**. The site is then at https://palash-2904.github.io/Personalized-Time-Table-website/ and runs in "Local only" mode (data stays in each browser, not shared across devices). For synced data, host the Node server (`npm start`) somewhere that runs Node and use that URL instead.
+
 ## API
 
 | Method | Path | Purpose |

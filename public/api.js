@@ -19,12 +19,12 @@
     };
     return {
       mode: "server",
-      load: () => call("GET", "/api/state"),
-      saveClass: (c) => (c.id ? call("PUT", `/api/classes/${c.id}`, c) : call("POST", "/api/classes", c)),
-      deleteClass: (id) => call("DELETE", `/api/classes/${id}`),
-      saveSettings: (s) => call("PUT", "/api/settings", s),
-      setReview: (classId, date, step, status) => call("PUT", "/api/reviews", { classId, date, step, status }),
-      setNote: (classId, date, topic) => call("PUT", "/api/notes", { classId, date, topic }),
+      load: () => call("GET", "api/state"),
+      saveClass: (c) => (c.id ? call("PUT", `api/classes/${c.id}`, c) : call("POST", "api/classes", c)),
+      deleteClass: (id) => call("DELETE", `api/classes/${id}`),
+      saveSettings: (s) => call("PUT", "api/settings", s),
+      setReview: (classId, date, step, status) => call("PUT", "api/reviews", { classId, date, step, status }),
+      setNote: (classId, date, topic) => call("PUT", "api/notes", { classId, date, topic }),
     };
   }
 
@@ -68,7 +68,7 @@
     try {
       const ctrl = new AbortController();
       const t = setTimeout(() => ctrl.abort(), 2500);
-      const res = await fetch("/api/state", { signal: ctrl.signal });
+      const res = await fetch("api/state", { signal: ctrl.signal });
       clearTimeout(t);
       if (res.ok && (res.headers.get("content-type") || "").includes("json")) return remote();
     } catch { /* no server */ }
